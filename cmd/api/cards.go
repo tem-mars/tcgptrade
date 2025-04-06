@@ -9,7 +9,20 @@ import (
 )
 
 func (app *application) createCardHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "create a new card")
+
+	var input struct {
+		Setname string   `json:"setname"`
+		Name    string   `json:"name"`
+		Rarity  string   `json:"rarity"`
+		Packs   []string `json:"packs"`
+	}
+
+	err := app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return 
+	}
+	fmt.Fprintf(w, "%+v\n", input)
 }
 
 func (app *application) showCardHandler(w http.ResponseWriter, r *http.Request) {
