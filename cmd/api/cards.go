@@ -12,9 +12,14 @@ import (
 func (app *application) createCardHandler(w http.ResponseWriter, r *http.Request) {
 
 	var input struct {
+		Setcode string   `json:"setcode"`
 		Setname string   `json:"setname"`
+		Number  int32    `json:"number"`
 		Name    string   `json:"name"`
+		Type    string   `json:"type"`
 		Rarity  string   `json:"rarity"`
+		Weakness string   `json:"weakness"`
+		Artist  string   `json:"artist"`
 		Packs   []string `json:"packs"`
 	}
 
@@ -25,9 +30,14 @@ func (app *application) createCardHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	card := &data.Card{
+		Setcode: input.Setcode,
 		Setname: input.Setname,
+		Number:  input.Number,
 		Name:    input.Name,
+		Type:    input.Type,
 		Rarity:  input.Rarity,
+		Weakness: input.Weakness,
+		Artist:  input.Artist,
 		Packs:   input.Packs,
 	}
 
