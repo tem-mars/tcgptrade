@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/tem-mars/tcgptrade/internal/data"
+	"github.com/tem-mars/tcgptrade/internal/validator"
 )
 
 func (app *application) createCardHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,9 +21,33 @@ func (app *application) createCardHandler(w http.ResponseWriter, r *http.Request
 	err := app.readJSON(w, r, &input)
 	if err != nil {
 		app.badRequestResponse(w, r, err)
-		return 
+		return
 	}
+	v := validator.New()
+
+	v.Check(input.Setname != "", "setname", "must be provided")
+	v.Check(len(input.Setname) <= 500, "setname", "must not be more than 500 bytes long")
+
+	v.Check(input.Name != "", "Name", "must be provided")
+	v.Check(len(input.Name) <= 500, "Name", "must not be more than 500 bytes long")
+
+	v.Check(input.Rarity != "", "rarity", "must be provided")
+	v.Check(len(input.Rarity) <= 500, "rarity", "must not be more than 500 bytes long")
+
+	v.Check(input.Packs != nil, "packs", "must be provided")
+	v.Check(len(input.Packs) >= 1, "packs", "must contain at least 1 genre")
+	v.Check(len(input.Packs) <= 5, "packs", "must not contain more than 5 genres")
+	// Note that we're using the Unique helper in the line below to check that all
+	// values in the input.Genres slice are unique.
+	v.Check(validator.Unique(input.Packs), "packs", "must not contain duplicate values")
+
+	if !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
 	fmt.Fprintf(w, "%+v\n", input)
+	
 }
 
 func (app *application) showCardHandler(w http.ResponseWriter, r *http.Request) {
