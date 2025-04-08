@@ -43,7 +43,7 @@ func (app *application) createCardHandler(w http.ResponseWriter, r *http.Request
 
 	v := validator.New()
 
-	if data.ValidateMovie(v, card); !v.Valid() {
+	if data.ValidateCard(v, card); !v.Valid() {
         app.failedValidationResponse(w, r, v.Errors)
         return
     }

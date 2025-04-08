@@ -21,7 +21,7 @@ type Card struct {
 	Version   int32     `json:"version"`
 }
 
-func ValidateMovie(v *validator.Validator, card *Card) {
+func ValidateCard(v *validator.Validator, card *Card) {
 	v.Check(card.Setcode != "", "setcode", "must be provided")
 	v.Check(len(card.Setcode) <= 500, "setcode", "must not be more than 500 bytes long")
 
